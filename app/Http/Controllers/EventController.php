@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EventExport;
 use App\Http\Requests\EventFormRequest;
 use App\Models\Event;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EventController extends Controller
 {
@@ -168,5 +170,10 @@ class EventController extends Controller
             ->get();
 
         return view('events.show', compact('event', 'relatedEvents'));
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(new EventExport($request->kategori_id, $request->search), 'events-'.now()->format('Y-m-d').'.xlsx');
     }
 }

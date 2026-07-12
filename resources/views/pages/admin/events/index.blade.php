@@ -44,6 +44,9 @@
             <div class="flex items-end gap-2">
                 <button type="submit" class="btn btn-primary flex-1">Filter</button>
                 <a href="{{ route('admin.events.index') }}" class="btn btn-ghost">Reset</a>
+                <a href="{{ route('admin.events.export', request()->only(['kategori_id', 'search'])) }}" class="btn btn-success">
+                    Export Excel
+                </a>
             </div>
         </div>
     </form>
