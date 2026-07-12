@@ -51,10 +51,21 @@
         </div>
     </form>
 
+    <div class="flex items-center gap-2 mb-4 hidden" id="bulk-actions">
+        <button type="button" onclick="bulkDelete()" class="btn btn-sm bg-red-500 text-white">
+            Hapus Terpilih (<span id="selected-count">0</span>)
+        </button>
+    </div>
+
     <div class="overflow-x-auto rounded-box bg-white p-5 shadow-xs">
         <table class="table">
             <thead>
                 <tr>
+                    <th>
+                        <label>
+                            <input type="checkbox" id="select-all" class="checkbox" />
+                        </label>
+                    </th>
                     <th>Gambar</th>
                     <th>Judul</th>
                     <th>Kategori</th>
@@ -75,6 +86,11 @@
                         };
                     @endphp
                     <tr>
+                        <th>
+                            <label>
+                                <input type="checkbox" class="checkbox row-checkbox" value="{{ $event->id }}" />
+                            </label>
+                        </th>
                         <td>
                             <img src="{{ $event->image_url }}" alt="{{ $event->judul }}" class="w-16 h-16 object-cover rounded" />
                         </td>
@@ -97,7 +113,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center py-6">Tidak ada event tersedia.</td>
+                        <td colspan="8" class="text-center py-6">Tidak ada event tersedia.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -108,4 +124,62 @@
         </div>
     </div>
 </div>
+<script>
+    const selectAll = document.getElementById('select-all');
+    const rowCheckboxes = () => Array.from(document.querySelectorAll('.row-checkbox'));
+
+    function updateSelectedCount() {
+        const count = rowCheckboxes().filter(cb => cb.checked).length;
+        document.getElementById('selected-count').textContent = count;
+        document.getElementById('bulk-actions').classList.toggle('hidden', count === 0);
+    }
+
+    if (selectAll) {
+        selectAll.addEventListener('change', () => {
+            rowCheckboxes().forEach(cb => { cb.checked = selectAll.checked; });
+            updateSelectedCount();
+        });
+    }
+
+    rowCheckboxes().forEach(cb => cb.addEventListener('change', () => {
+        if (selectAll) {
+            selectAll.checked = rowCheckboxes().every(c => c.checked);
+        }
+        updateSelectedCount();
+    }));
+
+    function bulkDelete() {
+        const selected = rowCheckboxes().filter(cb => cb.checked);
+
+        if (selected.length === 0) {
+            alert('Pilih setidaknya satu event untuk dihapus.');
+            return;
+        }
+
+        if (!confirm(`Yakin ingin menghapus ${selected.length} event?`)) {
+            return;
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route('admin.events.bulk-delete') }}';
+
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        form.appendChild(csrfInput);
+
+        selected.forEach(cb => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = cb.value;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
 @endsection

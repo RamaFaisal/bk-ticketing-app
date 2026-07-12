@@ -158,6 +158,41 @@ class EventController extends Controller
             ->with('success', 'Event berhasil dihapus!');
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $validated = $request->validate([
+            'ids'   => ['required', 'array'],
+            'ids.*' => ['integer', 'exists:events,id'],
+        ]);
+
+        $events = Event::whereIn('id', $validated['ids'])->get();
+
+        $deleted = 0;
+        $skipped = 0;
+
+        foreach ($events as $event) {
+            if ($event->hasSales()) {
+                $skipped++;
+
+                continue;
+            }
+
+            if ($event->gambar && $event->gambar !== 'konser.jpg' && Storage::disk('public')->exists($event->gambar)) {
+                Storage::disk('public')->delete($event->gambar);
+            }
+
+            $event->delete();
+            $deleted++;
+        }
+
+        $message = "{$deleted} event berhasil dihapus.";
+        if ($skipped > 0) {
+            $message .= " {$skipped} event dilewati karena sudah memiliki penjualan.";
+        }
+
+        return redirect()->route('admin.events.index')->with('success', $message);
+    }
+
     public function show(Event $event)
     {
         $event->load(['kategori', 'tickets']);
