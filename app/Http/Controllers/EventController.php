@@ -160,6 +160,28 @@ class EventController extends Controller
             ->with('success', 'Event berhasil dihapus!');
     }
 
+    public function clone(Event $event)
+    {
+        $new = $event->replicate();
+        $new->judul = $event->judul.' (Copy)';
+        $new->user_id = auth()->id();
+
+        if ($event->gambar && $event->gambar !== 'konser.jpg' && Storage::disk('public')->exists($event->gambar)) {
+            $newPath = 'events/'.uniqid('clone_').'.'.pathinfo($event->gambar, PATHINFO_EXTENSION);
+            Storage::disk('public')->copy($event->gambar, $newPath);
+            $new->gambar = $newPath;
+        }
+
+        $new->save();
+
+        foreach ($event->tickets as $ticket) {
+            $new->tickets()->create($ticket->only(['tipe', 'harga', 'stok']));
+        }
+
+        return redirect()->route('admin.events.edit', $new)
+            ->with('success', 'Event berhasil diduplikasi. Silakan sesuaikan tanggal & detailnya.');
+    }
+
     public function bulkDelete(Request $request)
     {
         $validated = $request->validate([

@@ -103,6 +103,10 @@
                             <div class="flex gap-1">
                                 <a href="{{ route('events.show', $event) }}" class="btn btn-sm btn-ghost" target="_blank">Lihat</a>
                                 <a href="{{ route('admin.events.edit', $event) }}" class="btn btn-sm btn-primary">Edit</a>
+                                <form method="POST" action="{{ route('admin.events.clone', $event) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-secondary">Clone</button>
+                                </form>
                                 <form method="POST" action="{{ route('admin.events.destroy', $event) }}" onsubmit="return confirm('Yakin ingin menghapus event ini?');">
                                     @csrf
                                     @method('DELETE')
