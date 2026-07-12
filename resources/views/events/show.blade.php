@@ -69,13 +69,13 @@
         </div>
 
         <!-- Ticket Options -->
-        @if ($event->tikets && $event->tikets->count() > 0)
+        @if ($event->tickets && $event->tickets->count() > 0)
             <div class="card bg-base-100 shadow-xl">
                 <div class="card-body">
                     <h2 class="card-title text-2xl mb-6">Pilih Tiket</h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach ($event->tikets as $tiket)
+                        @foreach ($event->tickets as $tiket)
                             <div class="card bg-base-200 hover:bg-base-300 transition-colors duration-200">
                                 <div class="card-body">
                                     <h3 class="card-title text-lg">Tiket {{ ucfirst($tiket->tipe) }}</h3>
@@ -115,6 +115,25 @@
                 <div class="card-body text-center">
                     <h3 class="text-xl font-semibold mb-2">Tiket Tidak Tersedia</h3>
                     <p class="text-gray-600">Belum ada tiket yang tersedia untuk event ini.</p>
+                </div>
+            </div>
+        @endif
+
+        <!-- Related Events -->
+        @if (isset($relatedEvents) && $relatedEvents->count() > 0)
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold mb-6">Event Terkait</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach ($relatedEvents as $related)
+                        <x-event-card
+                            :title="$related->judul"
+                            :date="$related->tanggal_waktu"
+                            :location="$related->lokasi"
+                            :price="$related->tickets->min('harga')"
+                            :image="$related->gambar"
+                            :href="route('events.show', $related)"
+                        />
+                    @endforeach
                 </div>
             </div>
         @endif
