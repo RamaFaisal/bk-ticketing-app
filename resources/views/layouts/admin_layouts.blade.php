@@ -12,7 +12,7 @@
 <body class="bg-gray-50">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-lg">
+        <aside class="w-64 bg-white shadow-lg fixed top-0 left-0 bottom-0 overflow-y-auto">
             <div class="p-6">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Admin Panel</h2>
 
@@ -36,6 +36,16 @@
                                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 3a3 3 0 1 0 6 0a3 3 0 1 0-6 0" />
                             </svg>
                             Manajemen Kategori
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('admin.events.index') }}"
+                           class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors {{ request()->routeIs('admin.events.*') ? 'bg-blue-50 text-blue-600' : '' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-5 h-5 mr-3">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Manajemen Event
                         </a>
                     </li>
                 </ul>
@@ -65,9 +75,9 @@
         </aside>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col ml-64">
             <!-- Top Header -->
-            <header class="bg-white shadow-sm border-b">
+            <header class="bg-white shadow-md fixed top-0 left-64 right-0 z-40">
                 <div class="px-6 py-4">
                     <div class="flex items-center justify-between">
                         <h1 class="text-xl font-semibold text-gray-900">@yield('title', 'Dashboard')</h1>
@@ -81,7 +91,7 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto bg-gray-50">
+            <main class="flex-1 overflow-y-auto bg-gray-50 mt-9">
                 <div class="p-6">
                     @yield('content')
                 </div>
@@ -91,7 +101,7 @@
 
     <!-- Success Toast Container -->
     @if(session('success'))
-        <div id="successToast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+        <div id="successToast" class="fixed top-2 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
             {{ session('success') }}
         </div>
         <script>
