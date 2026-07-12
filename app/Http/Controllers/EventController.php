@@ -7,7 +7,9 @@ use App\Http\Requests\EventFormRequest;
 use App\Models\Event;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
 
 class EventController extends Controller
@@ -47,7 +49,7 @@ class EventController extends Controller
     public function store(EventFormRequest $request)
     {
         $gambar = $request->hasFile('gambar')
-            ? $request->file('gambar')->store('events', 'public')
+            ? $this->storeCroppedImage($request->file('gambar'))
             : 'konser.jpg';
 
         $event = Event::create([
@@ -104,7 +106,7 @@ class EventController extends Controller
             if ($event->gambar && $event->gambar !== 'konser.jpg' && Storage::disk('public')->exists($event->gambar)) {
                 Storage::disk('public')->delete($event->gambar);
             }
-            $data['gambar'] = $request->file('gambar')->store('events', 'public');
+            $data['gambar'] = $this->storeCroppedImage($request->file('gambar'));
         }
 
         $event->update($data);
@@ -210,5 +212,15 @@ class EventController extends Controller
     public function export(Request $request)
     {
         return Excel::download(new EventExport($request->kategori_id, $request->search), 'events-'.now()->format('Y-m-d').'.xlsx');
+    }
+
+    private function storeCroppedImage(UploadedFile $file): string
+    {
+        $image = Image::decode($file->getRealPath())->cover(1280, 720);
+        $path = 'events/'.uniqid('event_').'.jpg';
+
+        Storage::disk('public')->put($path, (string) $image->encodeUsingFileExtension('jpg', quality: 85));
+
+        return $path;
     }
 }
