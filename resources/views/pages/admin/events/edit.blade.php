@@ -70,7 +70,7 @@
                             <span class="text-sm font-medium">Tanggal &amp; Waktu</span>
                             <span class="text-error">*</span>
                             @if ($hasSales)
-                                <span class="text-xs text-warning">(terkunci — event sudah terjual)</span>
+                                <span class="text-xs text-warning">(terkunci karena event sudah terjual)</span>
                             @endif
                         </label>
                         <input type="datetime-local" name="tanggal_waktu"
@@ -85,7 +85,7 @@
                         </label>
                         <img src="{{ $event->image_url }}" alt="{{ $event->judul }}" class="w-32 h-32 object-cover rounded mb-2" />
                         <input type="file" name="gambar" accept="image/*" class="file-input file-input-bordered w-full" onchange="previewImage(event)" />
-                        <p class="text-xs text-gray-400">Kosongkan jika tidak ingin mengubah gambar. (maks 2MB — otomatis dipotong ke rasio 16:9)</p>
+                        <p class="text-xs text-gray-400">Kosongkan jika tidak ingin mengubah gambar. (maks 2MB)</p>
                         <div id="imagePreview" class="hidden mt-2">
                             <span class="text-sm text-gray-500">Preview gambar baru:</span>
                             <img src="" alt="Preview" class="w-32 h-32 object-cover rounded" />

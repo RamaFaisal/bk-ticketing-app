@@ -68,7 +68,7 @@
                     <div class="space-y-2">
                         <label class="block">
                             <span class="text-sm font-medium">Gambar</span>
-                            <span class="text-xs text-gray-400">(maks 2MB, opsional — otomatis dipotong ke rasio 16:9)</span>
+                            <span class="text-xs text-gray-400">(maks 2MB, opsional)</span>
                         </label>
                         <input type="file" name="gambar" accept="image/*" class="file-input file-input-bordered w-full" onchange="previewImage(event)" />
                         <div id="imagePreview" class="hidden mt-2">
