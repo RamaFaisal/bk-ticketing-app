@@ -114,6 +114,33 @@
             </div>
         </div>
 
+        @if ($event->statusHistories->isNotEmpty())
+            <div class="card bg-white shadow-xs mb-6">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Riwayat Status</h2>
+                    <ul class="space-y-3">
+                        @foreach ($event->statusHistories as $history)
+                            @php
+                                $badge = match ($history->status) {
+                                    'Upcoming' => 'badge-info',
+                                    'Ongoing' => 'badge-success',
+                                    'Completed' => 'badge-neutral',
+                                    default => 'badge-ghost',
+                                };
+                            @endphp
+                            <li class="flex items-center gap-3">
+                                <span class="badge {{ $badge }}">{{ $history->status }}</span>
+                                <span class="text-sm text-gray-500">{{ $history->created_at->format('d M Y, H:i') }}</span>
+                                @if ($history->note)
+                                    <span class="text-sm text-gray-400">— {{ $history->note }}</span>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
+
         <div class="flex gap-2">
             <button type="submit" class="btn btn-primary">Perbarui Event</button>
             <a href="{{ route('admin.events.index') }}" class="btn btn-ghost">Batal</a>

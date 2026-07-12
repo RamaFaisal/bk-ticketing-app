@@ -36,6 +36,19 @@ class Event extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function statusHistories() {
+        return $this->hasMany(EventStatusHistory::class)->latest('id');
+    }
+
+    public function recordStatus(?string $note = null): void
+    {
+        $last = $this->statusHistories()->first();
+
+        if (! $last || $last->status !== $this->status) {
+            $this->statusHistories()->create(['status' => $this->status, 'note' => $note]);
+        }
+    }
+
     public function getStatusAttribute(): string
     {
         $now = now();

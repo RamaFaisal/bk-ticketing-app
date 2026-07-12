@@ -70,6 +70,8 @@ class EventController extends Controller
             ]);
         }
 
+        $event->recordStatus('Event dibuat');
+
         return redirect()->route('admin.events.index')
             ->with('success', 'Event berhasil ditambahkan!');
     }
@@ -77,7 +79,7 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $categories = Kategori::all();
-        $event->load(['tickets' => fn ($q) => $q->withCount('detailOrders')]);
+        $event->load(['tickets' => fn ($q) => $q->withCount('detailOrders'), 'statusHistories']);
         $hasSales = $event->hasSales();
 
         return view('pages.admin.events.edit', compact('event', 'categories', 'hasSales'));
@@ -110,6 +112,8 @@ class EventController extends Controller
         }
 
         $event->update($data);
+
+        $event->recordStatus('Event diperbarui');
 
         $keptIds = [];
         foreach ($request->tikets as $tiket) {
