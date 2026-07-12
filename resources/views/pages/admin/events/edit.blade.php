@@ -132,7 +132,7 @@
                                 <span class="badge {{ $badge }}">{{ $history->status }}</span>
                                 <span class="text-sm text-gray-500">{{ $history->created_at->format('d M Y, H:i') }}</span>
                                 @if ($history->note)
-                                    <span class="text-sm text-gray-400">— {{ $history->note }}</span>
+                                    <span class="text-sm text-gray-400">{{ $history->note }}</span>
                                 @endif
                             </li>
                         @endforeach

@@ -43,7 +43,7 @@
             </div>
             <div class="flex items-end gap-2">
                 <button type="submit" class="btn btn-primary flex-1">Filter</button>
-                <a href="{{ route('admin.events.index') }}" class="btn btn-ghost">Reset</a>
+                <a href="{{ route('admin.events.index') }}" class="btn btn-ghost border border-gray-300">Reset</a>
                 <a href="{{ route('admin.events.export', request()->only(['kategori_id', 'search'])) }}" class="btn btn-success">
                     Export Excel
                 </a>
@@ -53,7 +53,7 @@
 
     <div class="flex items-center gap-2 mb-4 hidden" id="bulk-actions">
         <button type="button" onclick="bulkDelete()" class="btn btn-sm bg-red-500 text-white">
-            Hapus Terpilih (<span id="selected-count">0</span>)
+            Hapus Terpilih
         </button>
     </div>
 
@@ -101,7 +101,7 @@
                         <td><span class="badge {{ $badge }}">{{ $event->status }}</span></td>
                         <td>
                             <div class="flex gap-1">
-                                <a href="{{ route('events.show', $event) }}" class="btn btn-sm btn-ghost" target="_blank">Lihat</a>
+                                <a href="{{ route('events.show', $event) }}" class="btn btn-sm btn-ghost border border-gray-300" target="_blank">Lihat</a>
                                 <a href="{{ route('admin.events.edit', $event) }}" class="btn btn-sm btn-primary">Edit</a>
                                 <form method="POST" action="{{ route('admin.events.clone', $event) }}">
                                     @csrf
