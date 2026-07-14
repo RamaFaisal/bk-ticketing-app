@@ -1,5 +1,5 @@
-    <x-app-layout>
-    <div class="max-w-7xl mx-auto py-8 px-6">
+<x-app-layout>
+    <div class="max-w-7xl mx-auto py-8 px-6 mt-16">
         <!-- Event Header -->
         <div class="card bg-base-100 shadow-xl mb-8">
             <div class="card-body">

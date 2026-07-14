@@ -134,7 +134,6 @@
 
     function updateSelectedCount() {
         const count = rowCheckboxes().filter(cb => cb.checked).length;
-        document.getElementById('selected-count').textContent = count;
         document.getElementById('bulk-actions').classList.toggle('hidden', count === 0);
     }
 

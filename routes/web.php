@@ -22,6 +22,7 @@ Route::prefix('admin')->name('categories.')->middleware(['auth', 'verified'])->g
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('destroy');
 });
 
+// Event routes (admin)
 Route::prefix('admin')->name('admin.events.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/events', [EventController::class, 'index'])->name('index');
     Route::get('/events/create', [EventController::class, 'create'])->name('create');
