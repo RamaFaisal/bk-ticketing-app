@@ -97,7 +97,7 @@
                         <td class="font-medium">{{ $event->judul }}</td>
                         <td>{{ $event->kategori->nama ?? '-' }}</td>
                         <td>{{ $event->tanggal_waktu->format('d M Y, H:i') }}</td>
-                        <td>{{ $event->lokasi }}</td>
+                        <td>{{ $event->lokasi->nama_lokasi ?? '-' }}</td>
                         <td><span class="badge {{ $badge }}">{{ $event->status }}</span></td>
                         <td>
                             <div class="flex gap-1">

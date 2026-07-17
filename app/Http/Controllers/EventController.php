@@ -6,6 +6,7 @@ use App\Exports\EventExport;
 use App\Http\Requests\EventFormRequest;
 use App\Models\Event;
 use App\Models\Kategori;
+use App\Models\lokasi;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +17,7 @@ class EventController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Event::with(['kategori', 'tickets']);
+        $query = Event::with(['kategori', 'tickets', 'lokasi']);
 
         if ($request->filled('kategori_id')) {
             $query->where('kategori_id', $request->kategori_id);
@@ -35,21 +36,23 @@ class EventController extends Controller
 
         $events = $query->paginate(10);
         $categories = Kategori::all();
+        $locations = lokasi::all()->where('aktif', 'Y');
 
-        return view('pages.admin.events.index', compact('events', 'categories', 'sort'));
+        return view('pages.admin.events.index', compact('events', 'categories', 'locations', 'sort'));
     }
 
     public function create()
     {
         $categories = Kategori::all();
+        $locations = lokasi::all()->where('aktif', 'Y');
 
-        return view('pages.admin.events.create', compact('categories'));
+        return view('pages.admin.events.create', compact('categories', 'locations'));
     }
 
     public function store(EventFormRequest $request)
     {
         $gambar = $request->hasFile('gambar')
-            ? $this->storeCroppedImage($request->file('gambar'))
+            ? $request->file('gambar')->store('events', 'public')
             : 'konser.jpg';
 
         $event = Event::create([
@@ -57,9 +60,9 @@ class EventController extends Controller
             'kategori_id'   => $request->kategori_id,
             'judul'         => $request->judul,
             'deskripsi'     => $request->deskripsi,
-            'lokasi'        => $request->lokasi,
             'gambar'        => $gambar,
             'tanggal_waktu' => $request->tanggal_waktu,
+            'lokasi_id'     => $request->lokasi_id,
         ]);
 
         foreach ($request->tikets as $tiket) {
@@ -79,10 +82,11 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $categories = Kategori::all();
+        $locations = lokasi::all()->where('aktif', 'Y');
         $event->load(['tickets' => fn ($q) => $q->withCount('detailOrders'), 'statusHistories']);
         $hasSales = $event->hasSales();
 
-        return view('pages.admin.events.edit', compact('event', 'categories', 'hasSales'));
+        return view('pages.admin.events.edit', compact('event', 'categories', 'locations', 'hasSales'));
     }
 
     public function update(EventFormRequest $request, Event $event)
@@ -100,7 +104,7 @@ class EventController extends Controller
             'kategori_id'   => $request->kategori_id,
             'judul'         => $request->judul,
             'deskripsi'     => $request->deskripsi,
-            'lokasi'        => $request->lokasi,
+            'lokasi_id'        => $request->lokasi_id,
             'tanggal_waktu' => $request->tanggal_waktu,
         ];
 

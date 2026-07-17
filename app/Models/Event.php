@@ -10,7 +10,7 @@ class Event extends Model
         'judul',
         'deskripsi',
         'tanggal_waktu',
-        'lokasi',
+        'lokasi_id',
         'gambar',
         'user_id',
         'kategori_id'
@@ -40,6 +40,10 @@ class Event extends Model
         return $this->hasMany(EventStatusHistory::class)->latest('id');
     }
 
+    public function lokasi() {
+        return $this->belongsTo(lokasi::class);
+    }
+
     public function recordStatus(?string $note = null): void
     {
         $last = $this->statusHistories()->first();
@@ -56,7 +60,7 @@ class Event extends Model
         if ($this->tanggal_waktu > $now) {
             return 'Upcoming';
         }
-        
+
         if ($this->tanggal_waktu >= $now->copy()->subHours(3)) {
             return 'Ongoing';
         }

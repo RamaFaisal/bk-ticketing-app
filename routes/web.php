@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,14 @@ Route::prefix('admin')->name('categories.')->middleware(['auth', 'verified'])->g
     Route::post('/categories', [CategoryController::class, 'store'])->name('store');
     Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('update');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('destroy');
+});
+
+// Category routes (admin)
+Route::prefix('admin')->name('admin.locations.')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/locations', [LocationController::class, 'index'])->name('index');
+    Route::post('/locations', [LocationController::class, 'store'])->name('store');
+    Route::put('/locations/{id}', [LocationController::class, 'update'])->name('update');
+    Route::delete('/locations/{id}', [LocationController::class, 'destroy'])->name('destroy');
 });
 
 // Event routes (admin)

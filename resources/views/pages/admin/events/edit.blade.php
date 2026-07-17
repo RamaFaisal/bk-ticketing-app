@@ -62,7 +62,15 @@
                             <span class="text-sm font-medium">Lokasi</span>
                             <span class="text-error">*</span>
                         </label>
-                        <input type="text" name="lokasi" value="{{ old('lokasi', $event->lokasi) }}" class="input input-bordered w-full" required />
+                        <select name="lokasi_id" class="select select-bordered w-full" required>
+                            <option value="">Pilih Lokasi</option>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}"
+                                {{ old('lokasi_id'), $event->lokasi_id == $location->id ? 'selected' : '' }}>
+                                    {{ $location->nama_lokasi }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="space-y-2">
